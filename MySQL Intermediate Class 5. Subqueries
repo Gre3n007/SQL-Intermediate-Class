@@ -1,0 +1,44 @@
+-- SUbqueries--
+
+-- A query within a query--
+
+select* from employee_demographics
+where employee_id in
+( select employee_id 
+	from employee_salary 
+    where dept_id= 1);
+
+select first_name, salary, avg(salary) as AVG
+from  employee_salary
+group by first_name, salary;
+
+select first_name, salary,
+(select avg(salary)  
+from  employee_salary) as AVG
+from employee_salary;
+
+
+select gender, AVG(age), max(age), count(age)
+from employee_demographics
+group by gender;
+
+-- Rewritten as a subqueries--
+
+select * 
+from 
+(select gender, AVG(age), max(age), count(age)
+from employee_demographics
+group by gender
+) as Agg_Table;
+
+
+select gender, avg(max_age) avg_age
+from 
+(select gender, AVG(age) avg_age, 
+max(age) max_age, 
+min(age) min_age, 
+count(age)
+from employee_demographics
+group by gender
+) as Agg_Table
+group by gender;
